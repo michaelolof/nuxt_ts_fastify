@@ -1,0 +1,33 @@
+version: "3.7"
+
+services:
+    db:
+        container_name: postgres_db
+        image: "postgres:16.3-alpine3.20"
+        restart: always
+        environment:
+            POSTGRES_USER: "${POSTGRES_USER}"
+            POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+            POSTGRES_DB: "${POSTGRES_DB}"
+        ports:
+            - ${POSTGRES_PORT}:5432
+        volumes:
+            - .data/postgres:/var/lib/postgresql/data
+
+    # drizzle_studio:
+    #     container_name: drizzle_studio
+    #     restart: unless-stopped
+    #     build:
+    #         context: .
+    #         dockerfile: config/docker/DrizzleStudio.Dockerfile
+    #     depends_on:
+    #         db:
+    #             condition: service_healthy
+    #     network_mode: host # use host network for drizzle studio cause isolate network within container is not supported
+    #     command: pnpm exec drizzle-kit studio --port 6102
+
+    adminer:
+        image: adminer
+        restart: always
+        ports:
+            - 6101:8080
