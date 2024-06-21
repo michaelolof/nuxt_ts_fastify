@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "imports": {
-    "#server/*": "./server/*.ts"
+    "#server/*": "./server/*.ts",
+    "#utils/*": "./utils/*.ts"
   },
   "scripts": {
     "lint": "./node_modules/.bin/eslint --fix",
@@ -25,16 +26,17 @@
     "nuxt": "^3.12.2",
     "pino": "^9.2.0",
     "pino-pretty": "^11.2.1",
+    "tsx": "^4.15.6",
     "vue": "^3.4.29",
     "vue-router": "^4.3.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.5.0",
-    "@fastify/swagger-ui": "^4.0.0",
     "@stylistic/eslint-plugin": "^2.2.1",
     "eslint": "^9.5.0",
     "eslint-plugin-vue": "^9.26.0",
     "globals": "^15.6.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.13.1"
   },

@@ -14,7 +14,21 @@ app.get("/ping", () => {
     };
 });
 
-export default eventHandler(async(event) => {
+try {
     await app.ready();
+} catch(e) {
+    console.log("Error getting ready", e);
+}
+
+export default eventHandler(async(event) => {
     app.server.emit("request", event.node.req, event.node.res);
 });
+
+// export default lazyEventHandler(async() => {    
+
+//     await app.ready();
+
+//     return eventHandler(async(event) => {
+//         app.server.emit("request", event.node.req, event.node.res);
+//     });
+// });

@@ -8,9 +8,9 @@ const ignores = [
     "node_modules/**/*",
     "vscode/**/*",
     "temp/**/*",
-    "src/vendor/**/*",
     ".nuxt/**/*",
     ".output/**/*",
+    "server/vendor/**/*",
 ];
 
 export default [

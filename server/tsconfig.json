@@ -4,10 +4,17 @@
     "paths": {
       "#server/*": [
         "./*"
+      ],
+      "#utils/*": [
+        "../utils/*"
       ]
     }
   },
   "exclude": [
-    "../eslint.config.js"
-  ]
+    "../eslint.config.js",
+    "./vendor/**/*"
+  ],
+  "ts-node": {
+    "esm": true
+  },
 }
