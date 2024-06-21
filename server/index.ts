@@ -1,8 +1,6 @@
 import { setupServer } from "#server/modules/setup/fastify";
 
-const port = Number(process.env.PORT);
-
-const app = setupServer(port, {
+const app = setupServer({
     logger: process.env.NODE_ENV === "development" ? { transport: { target: "pino-pretty" } } : true,
 });
 

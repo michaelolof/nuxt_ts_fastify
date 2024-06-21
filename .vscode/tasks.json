@@ -1,0 +1,16 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "test:server",
+			"problemMatcher": [],
+			"label": "npm: test:server",
+			"detail": "export TS_NODE_TEST=1 && node --env-file .env --import tsx --test server/controllers/users/*test.ts",
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			}
+		}
+	]
+}

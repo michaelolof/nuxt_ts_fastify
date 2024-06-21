@@ -19,7 +19,7 @@ export const createNewUser = defineController({
             throw new AppError(errs.BadRequest, "User must be above 18 to signup");
         }
 
-        return res.sendCode(201, {
+        return res.sendJSON(201, {
             id: "10",
             email: req.body.email,
             first_name: req.body.first_name,

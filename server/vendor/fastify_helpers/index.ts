@@ -1,5 +1,5 @@
-import  { type TObject, type Static, type TSchema, Type, type TProperties } from "@sinclair/typebox";
-import type  { FastifyRequest, FastifyReply, FastifyInstance  } from "fastify";
+import { type TObject, type Static, type TSchema, Type, type TProperties } from "@sinclair/typebox";
+import type { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 
 export type BaseSchema = {
     query?: TObject<any>;
@@ -29,36 +29,36 @@ type InferDefaultResponse<U> = U extends Record<"default", TSchema> ? Static<U["
 
 type InferResponseByCode<C extends string | number, T> = T extends BaseSchema
     ? T["response"] extends (infer U) | undefined
-        ?  U extends Record<C, TSchema>
-            ? Static<U[C]>
-            : U extends Record<number | string, TSchema>
-                ? C extends InformationalStatuses
-                    ? U extends Record<"1XX", TSchema>
-                        ? Static<U["1XX"]>
-                        : InferDefaultResponse<U>
-                    : C extends SuccessStatuses
-                        ? U extends Record<"2XX", TSchema>
-                            ? Static<U["2XX"]>
-                            : InferDefaultResponse<U>
-                        : C extends RedirectionStatuses
-                            ? U extends Record<"3XX", TSchema>
-                                ? Static<U["3XX"]>
-                                : InferDefaultResponse<U>
-                            : C extends ClientErrorStatuses
-                                ? U extends Record<"4XX", TSchema>
-                                    ? Static<U["4XX"]>
-                                    : InferDefaultResponse<U>
-                                : C extends ServerErrorStatuses
-                                    ? U extends Record<"5XX", TSchema>
-                                        ? Static<U["5XX"]>
-                                        : InferDefaultResponse<U>
-                                    : never
-                : never
-        : never
+    ? U extends Record<C, TSchema>
+    ? Static<U[C]>
+    : U extends Record<number | string, TSchema>
+    ? C extends InformationalStatuses
+    ? U extends Record<"1XX", TSchema>
+    ? Static<U["1XX"]>
+    : InferDefaultResponse<U>
+    : C extends SuccessStatuses
+    ? U extends Record<"2XX", TSchema>
+    ? Static<U["2XX"]>
+    : InferDefaultResponse<U>
+    : C extends RedirectionStatuses
+    ? U extends Record<"3XX", TSchema>
+    ? Static<U["3XX"]>
+    : InferDefaultResponse<U>
+    : C extends ClientErrorStatuses
+    ? U extends Record<"4XX", TSchema>
+    ? Static<U["4XX"]>
+    : InferDefaultResponse<U>
+    : C extends ServerErrorStatuses
+    ? U extends Record<"5XX", TSchema>
+    ? Static<U["5XX"]>
+    : InferDefaultResponse<U>
+    : never
+    : never
+    : never
     : never;
 
 type ReplyUtils<S> = {
-    sendCode<C extends number>(code: C, payload: InferResponseByCode<C, S>): any;
+    sendJSON<C extends number>(code: C, payload: InferResponseByCode<C, S>): any;
 };
 
 //@ts-expect-error I know what I'm doing here
@@ -71,28 +71,28 @@ type FastifyReplySchemaPayload<S> = FastifyReply<any, any, any, { Body: Static<S
 type BaseController<S extends BaseSchema, D extends TSchema> = {
     locals?: D;
     schema?: S;
-    preHandler?: ((req: FastifyRequestSchemaPayload<S> & { locals: Static<D> }, resp: FastifyReplySchemaPayload<S>, next: () => void) => void)[]; 
+    preHandler?: ((req: FastifyRequestSchemaPayload<S> & { locals: Static<D> }, resp: FastifyReplySchemaPayload<S>, next: () => void) => void)[];
     //@ts-expect-error I know what i'm doing here
-    handler: (req: FastifyRequestSchemaPayload<S> & { locals: Static<D> }, rep: FastifyReplySchemaPayload<S> ) => Promise<Static<S["response"][200]>>;
+    handler: (req: FastifyRequestSchemaPayload<S> & { locals: Static<D> }, rep: FastifyReplySchemaPayload<S>) => Promise<Static<S["response"][200]>>;
 };
 
 type PredefinedController<S extends BaseSchema, S0 extends BaseSchema, D extends TSchema, D0 extends TSchema> = {
     locals?: D;
     schema?: S;
-    preHandler?: ((req: FastifyRequestSchemaPayload<S>, resp: FastifyReplySchemaPayload<S>, next: () => void) => void)[]; 
+    preHandler?: ((req: FastifyRequestSchemaPayload<S>, resp: FastifyReplySchemaPayload<S>, next: () => void) => void)[];
     //@ts-expect-error I know what i'm doing here
-    handler: (req: FastifyRequestSchemaPayload<S & S0> & { locals: Static<D> & Static<D0> }, rep: FastifyReplySchemaPayload<S & S0> ) => Promise<Static<S["response"][200]>>;
+    handler: (req: FastifyRequestSchemaPayload<S & S0> & { locals: Static<D> & Static<D0> }, rep: FastifyReplySchemaPayload<S & S0>) => Promise<Static<S["response"][200]>>;
 };
 
 type UnknownController = {
     schema?: any;
     handler: any;
-    preHandler?: ((req: any, resp: any, next: () => void) => void)[]; 
+    preHandler?: ((req: any, resp: any, next: () => void) => void)[];
 };
 
-export const useControllerDefinition = <S extends BaseSchema, D extends TSchema>(definition: Omit<BaseController<S, D>, "handler">) => <S1 extends BaseSchema, D1 extends TSchema>(options: PredefinedController<S1, S, D1, D>): UnknownController =>  {
-    
-    const merge = (one: TSchema | undefined, two: TSchema |undefined) => {
+export const useControllerDefinition = <S extends BaseSchema, D extends TSchema>(definition: Omit<BaseController<S, D>, "handler">) => <S1 extends BaseSchema, D1 extends TSchema>(options: PredefinedController<S1, S, D1, D>): UnknownController => {
+
+    const merge = (one: TSchema | undefined, two: TSchema | undefined) => {
         if (!one && !two) {
             return undefined;
         } else if (one && !two) {
@@ -104,7 +104,7 @@ export const useControllerDefinition = <S extends BaseSchema, D extends TSchema>
     };
 
     const trimFields = <T extends Record<string, any>>(obj: T) => {
-        for(const key in obj) {
+        for (const key in obj) {
             if (obj[key] === undefined) {
                 delete obj[key];
             }
@@ -128,14 +128,14 @@ export const useControllerDefinition = <S extends BaseSchema, D extends TSchema>
         preHandler: preHandlers.length > 0 ? preHandlers : undefined,
         handler: options.handler,
     };
-    
+
 };
 
 type ControllerOptions<S> = {
     schema?: S;
     //@ts-expect-error I know what i'm doing here
     handler: (req: FastifyRequestSchemaPayload<S>, res: FastifyReplySchemaPayload<S>) => Promise<Static<S["response"][200]>>;
-    preHandler?: ((req: FastifyRequestSchemaPayload<S>, res: FastifyReplySchemaPayload<S>, next:  () => void) => void)[];
+    preHandler?: ((req: FastifyRequestSchemaPayload<S>, res: FastifyReplySchemaPayload<S>, next: () => void) => void)[];
 };
 
 export function defineController<S>(options: ControllerOptions<S>): ControllerOptions<S> {
@@ -167,7 +167,7 @@ export function defineRouter(app: FastifyInstance): FastifyRouter {
 
     const rtn = {} as FastifyRouter;
 
-    for(const m of methods) {
+    for (const m of methods) {
         rtn[m] = (url, controller) => {
             return app.route({ url, method: m, handler: controller.handler, schema: controller.schema, preHandler: controller.preHandler });
         };
@@ -177,8 +177,10 @@ export function defineRouter(app: FastifyInstance): FastifyRouter {
 }
 
 export function initRouter(app: FastifyInstance) {
-    app.decorateReply("sendCode", function(this: FastifyReply, code: number, res: any) {
-        return this.code(code).send(res);
+    app.decorateReply("sendJSON", function (this: FastifyReply, code: number, res: any) {
+        return this.code(code)
+            .headers({ "content-type": "application/json; charset=utf-8" })
+            .send(res);
     });
     app.decorateRequest("locals", null);
     app.addHook("preHandler", (req, res, next) => {

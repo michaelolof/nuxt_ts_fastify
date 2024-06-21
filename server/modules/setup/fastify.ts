@@ -1,19 +1,15 @@
 import path from "path";
-import { fileURLToPath } from "url";
 import Fastify, { type FastifyInstance, type FastifyServerOptions } from "fastify";
 import cors from "@fastify/cors";
 import fastifySwagger from "@fastify/swagger";
-import autolad from "#server/vendor/ts-autoloader/index";
 import { type ErrorResponse, parseAppError } from "#server/modules/errors/utils";
 import { initRouter } from "../../vendor/fastify_helpers/index";
 import { errs } from "#server/modules/errors/keys";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const __srcdir = path.resolve(__dirname, "../../");
+import v1Routes from "#server/routes/v1";
 
 
-export function setupServer<T extends FastifyServerOptions>(port: number, opts: T): FastifyInstance {
+
+export function setupServer<T extends FastifyServerOptions>(opts?: T): FastifyInstance {
     const app = Fastify(opts).withTypeProvider();
 
     initRouter(app);
@@ -37,13 +33,12 @@ export function setupServer<T extends FastifyServerOptions>(port: number, opts: 
 
     serverApiDocs(app, "/api-docs");
     
-    app.register(autolad, {
-        dir: `${__srcdir}/server/routes`,
-    });
+    app.register(v1Routes, { prefix: "v1" });
 
     app.setErrorHandler((err, req, res) => {
-        const aerr = parseAppError(err);  
+        const aerr = parseAppError(err);
         return res.code(aerr.statusCode)
+            .headers({"content-type": "application/json; charset=utf-8"})
             .send({
                 status: "error",
                 key: aerr.key,
@@ -56,6 +51,7 @@ export function setupServer<T extends FastifyServerOptions>(port: number, opts: 
 
     app.setNotFoundHandler((req, res) => {
         return res.code(404)
+            .headers({"content-type": "application/json; charset=utf-8"})
             .send({
                 status: "error",
                 key: errs.NotFound.key,

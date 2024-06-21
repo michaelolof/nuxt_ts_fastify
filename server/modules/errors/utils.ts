@@ -1,5 +1,5 @@
 import { errs, fastifyErrorMappings } from "./keys";
-import { AppError, ErrorKind } from "./types";
+import { AppError, type ErrorKind } from "./types";
 
 export function tryFn<T>(fn: () => T): T | AppError {
     try {
@@ -32,6 +32,7 @@ export async function tryAsyncFn<T>(fn: () => Promise<T>): Promise<T | AppError>
 }
 
 export function parseAppError(val: any): AppError {
+    
     switch (typeof val) {
         case "string":
             return new AppError(errs.TypeMismatch).withDetail(val);

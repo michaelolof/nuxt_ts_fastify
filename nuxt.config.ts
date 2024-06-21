@@ -9,8 +9,11 @@ export default defineNuxtConfig({
         },
     },
     runtimeConfig: {
-        FASTIFY_AUTOLOAD_TYPESCRIPT: process.env.FASTIFY_AUTOLOAD_TYPESCRIPT,
+        FASTIFY_AUTOLOAD_TYPESCRIPT: process.env.FASTIFY_AUTOLOAD_TYPESCRIPT || "1",
     },
+    modules: [
+        "@nuxt/test-utils/module",
+    ],
     serverHandlers: [
         {
             route: "/api",

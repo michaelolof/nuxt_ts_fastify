@@ -13,8 +13,5 @@
   "exclude": [
     "../eslint.config.js",
     "./vendor/**/*"
-  ],
-  "ts-node": {
-    "esm": true
-  },
+  ]
 }

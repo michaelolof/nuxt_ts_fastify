@@ -23,12 +23,16 @@ export class AppError extends Error {
     ts = Date.now();
     statusCode = 500;
     key = "";
-
+    
     constructor(kind: ErrorKind, message?: string, code?: number) {
         super(message || kind.friendly);
         this.name = "AppError";
         this.statusCode = code || kind.code;
         this.key = kind.key;
+    }
+
+    static [Symbol.hasInstance](val: any): boolean {
+        return val instanceof Error && val.name === "AppError" && "key" in val && "ts" in val; 
     }
 
     static parseError(err: Error, msg?: string): AppError {
